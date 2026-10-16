@@ -1,0 +1,74 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node (web/.gitignore covers the rest)
+node_modules/
+
+# ML: raw attempt data and Endor notes with account details never get committed
+ml/data/raw/
+ml/notes/base_models.json
+ml/notes/limits.json
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/
+
+# Build, test and tool output
+.next/
+out/
+dist/
+build/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+*.tsbuildinfo
+next-env.d.ts
+*.log
+*.pid
+tmp/
+
+# Local tool state (skills under .claude/skills and .agents/skills stay tracked)
+.claude/settings.local.json
+.claude/*.local.*
+.vercel/
+.render/
+
+# Local data and downloads
+ml/data/raw/
+ml/results/tmp/
+*.sqlite
+*.db
+*.zip
+*.tar.gz
+
+# More OS and editor files
+Thumbs.db
+*.swp
+*~
+.vscode/
+
+# Confidential: internal specs, Endor beta notes and skills stay out of the public repo
+docs/PRD.md
+docs/ARCHITECTURE.md
+docs/PLAN.md
+docs/endor-facts.md
+docs/design-system.md
+docs/LAUNCH-APPROVAL.md
+.claude/skills/endor-facts/
+.claude/skills/gate-policy/
+CLAUDE.md
+ml/notes/

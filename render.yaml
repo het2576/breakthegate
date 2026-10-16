@@ -1,0 +1,83 @@
+# Render blueprint for the API and the warm-up cron (docs/DEPLOY.md).
+# Secrets use sync: false, so Render asks for them on first deploy and never
+# reads them from this file.
+services:
+  - type: web
+    name: btg-api
+    runtime: python
+    rootDir: api
+    plan: starter
+    region: singapore
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    preDeployCommand: uv run --no-dev python -m app.store.migrate
+    startCommand: uv run --no-dev uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: APP_ENV
+        value: prod
+      - key: ENDOR_MODE
+        value: live
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: GAME_PAUSED
+        value: "false"
+      - key: MAX_DAILY_USD
+        value: "5"
+      - key: MAX_DAILY_TOKENS
+        value: "5000000"
+      - key: ENDOR_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: PROXY_SECRET
+        sync: false
+      - key: IP_HASH_SALT_SEED
+        generateValue: true
+      - key: WARM_SECRET
+        generateValue: true
+      - key: TURNSTILE_SECRET
+        sync: false
+      - key: REVEAL_VIDEO_ID
+        sync: false
+
+  # Models go cold after about 15 idle minutes. One tiny decision per model
+  # every 10 minutes costs well under a cent a day.
+  - type: cron
+    name: btg-warm
+    runtime: python
+    rootDir: api
+    plan: starter
+    region: singapore
+    schedule: "*/10 * * * *"
+    buildCommand: "true"
+    startCommand: >-
+      curl -fsS --max-time 340 -H "X-Warm-Secret: $WARM_SECRET" "$API_URL/health/warm"
+    envVars:
+      - key: API_URL
+        sync: false
+      - key: WARM_SECRET
+        fromService:
+          type: web
+          name: btg-api
+          envVarKey: WARM_SECRET
+
+  # PRD 4.2 retention: raw attempts 90 days, idempotency keys 10 minutes.
+  - type: cron
+    name: btg-retention
+    runtime: python
+    rootDir: api
+    plan: starter
+    region: singapore
+    schedule: "17 3 * * *"
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run --no-dev python -m app.store.retention
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: DATABASE_URL
+        fromService:
+          type: web
+          name: btg-api
+          envVarKey: DATABASE_URL
