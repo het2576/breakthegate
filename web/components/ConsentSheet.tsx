@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { copy } from "@/lib/copy";
 
+import { HowSteps } from "./HowToPlay";
 import { Turnstile, turnstileEnabled } from "./Turnstile";
 
 interface ConsentSheetProps {
@@ -58,6 +59,10 @@ export function ConsentSheet({ onStart }: ConsentSheetProps) {
         <p id="consent-body" className="mt-3 max-w-[60ch] text-ink">
           {copy.consentBody}
         </p>
+
+        <h3 className="sign mt-5 text-lg">{copy.guideTitle}</h3>
+        <p className="mt-1 max-w-[60ch]">{copy.howIntro}</p>
+        <HowSteps />
 
         <div className="mt-5 flex items-center justify-between gap-4 rounded-field border-2 border-ink bg-paper px-4 py-3">
           <span id="consent-label" className="font-bold">

@@ -17,6 +17,7 @@ import { Checks } from "./Checks";
 import { Composer } from "./Composer";
 import { ConsentSheet } from "./ConsentSheet";
 import { Header, PANEL_ID, tabId } from "./Header";
+import { HowToPlay } from "./HowToPlay";
 import { LockIcon } from "./icons";
 import { Leaderboard } from "./Leaderboard";
 import { PlayerDesk } from "./PlayerDesk";
@@ -90,6 +91,7 @@ function Loading({ error }: { error: string | null }) {
 export function Game() {
   const reducedMotion = useReducedMotion();
   const [data, setData] = useState<LevelsResponse | null>(null);
+  const [howOpen, setHowOpen] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null | undefined>(undefined); // undefined: not known yet
   const [level, setLevel] = useState(1);
@@ -243,7 +245,8 @@ export function Game() {
 
   return (
     <>
-      <Header levels={data?.levels ?? []} level={level} onLevel={changeLevel} sound={sound} onSound={toggleSound} />
+      <Header levels={data?.levels ?? []} level={level} onLevel={changeLevel} sound={sound} onSound={toggleSound} onHow={() => setHowOpen(true)} />
+      <HowToPlay open={howOpen} onClose={() => setHowOpen(false)} />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
         {!data || !current ? (

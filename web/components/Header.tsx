@@ -13,6 +13,7 @@ interface HeaderProps {
   onLevel: (level: number) => void;
   sound: boolean;
   onSound: (on: boolean) => void;
+  onHow: () => void;
 }
 
 export const PANEL_ID = "level-panel";
@@ -58,7 +59,7 @@ function LevelPlates({ levels, level, onLevel }: Pick<HeaderProps, "levels" | "l
             title={lv.locked ? copy.levelLocked : lv.name}
             onClick={() => onLevel(lv.level)}
             onKeyDown={(e) => onKey(e, index)}
-            className={`sign inline-flex h-11 min-w-11 items-center justify-center gap-1 rounded-field border-2 px-3 text-lg leading-none ${
+            className={`sign inline-flex h-11 min-w-11 items-center justify-center gap-1 rounded-field border-2 px-3 text-base leading-none ${
               active
                 ? "border-ink bg-signal text-ink"
                 : "border-white/55 bg-transparent text-white hover:border-white"
@@ -73,12 +74,12 @@ function LevelPlates({ levels, level, onLevel }: Pick<HeaderProps, "levels" | "l
   );
 }
 
-export function Header({ levels, level, onLevel, sound, onSound }: HeaderProps) {
+export function Header({ levels, level, onLevel, sound, onSound, onHow }: HeaderProps) {
   return (
     <header className="bg-cobalt text-white">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-4 px-4 py-3 sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
         <div className="min-w-0 flex-1 sm:flex-none">
-          <h1 className="sign text-lg leading-none whitespace-nowrap max-sm:[font-variation-settings:'wdth'_108] sm:text-2xl">
+          <h1 className="sign text-sm leading-none whitespace-nowrap sm:text-2xl">
             {copy.title}
           </h1>
           <p className="mt-1 hidden max-w-[34ch] text-sm leading-snug text-white/90 lg:block">
@@ -94,7 +95,7 @@ export function Header({ levels, level, onLevel, sound, onSound }: HeaderProps) 
             <select
               value={level}
               onChange={(e) => onLevel(Number(e.target.value))}
-              className="sign h-11 appearance-none rounded-field border-2 border-white/70 bg-cobalt py-1 pr-9 pl-3 text-base text-white"
+              className="sign h-11 appearance-none rounded-field border-2 border-white/70 bg-cobalt py-1 pr-8 pl-2 text-sm text-white"
             >
               {levels.map((lv) => (
                 <option key={lv.level} value={lv.level}>
@@ -109,9 +110,19 @@ export function Header({ levels, level, onLevel, sound, onSound }: HeaderProps) 
 
         <button
           type="button"
+          onClick={onHow}
+          className="ml-auto inline-flex h-11 items-center justify-center gap-2 rounded-field border-2 border-white/55 px-2.5 text-sm font-bold hover:border-white max-sm:min-w-11 sm:px-3"
+          data-testid="how-open"
+        >
+          <span aria-hidden className="sign">?</span>
+          <span className="whitespace-nowrap max-sm:sr-only">{copy.howButton}</span>
+        </button>
+
+        <button
+          type="button"
           aria-pressed={sound}
           onClick={() => onSound(!sound)}
-          className="ml-auto inline-flex h-11 items-center gap-2 rounded-field border-2 border-white/55 px-3 text-sm font-bold hover:border-white"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-field border-2 border-white/55 px-2.5 text-sm font-bold hover:border-white max-sm:min-w-11 sm:px-3"
         >
           <SpeakerIcon on={sound} />
           <span className="hidden whitespace-nowrap lg:inline">{sound ? copy.soundOn : copy.soundOff}</span>

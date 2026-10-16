@@ -230,6 +230,19 @@ test.describe("keyboard, motion, layout", () => {
     expect((await page.getByTestId("status").boundingBox())?.y).toBe(statusBefore?.y);
   });
 
+  test("how to play explains the game on first visit and from the header", async ({ page }) => {
+    await mockApi(page, () => ({ status: 200, body: result() }));
+    await page.goto("/");
+    const sheet = page.getByTestId("consent-sheet");
+    await expect(sheet).toContainText("How to play");
+    await expect(sheet).toContainText("Pick a goal");
+    await page.getByTestId("consent-start").click();
+    await page.getByTestId("how-open").click();
+    await expect(page.getByTestId("how-to-play")).toContainText("fool it into saying yes");
+    await page.getByTestId("how-close").click();
+    await expect(page.getByTestId("how-to-play")).toBeHidden();
+  });
+
   test("no horizontal scroll at 320 px @mobile", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 640 });
     await mockApi(page, () => ({ status: 200, body: result() }), { session: true });
