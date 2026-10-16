@@ -17,6 +17,7 @@ import { Checks } from "./Checks";
 import { Composer } from "./Composer";
 import { ConsentSheet } from "./ConsentSheet";
 import { Header, PANEL_ID, tabId } from "./Header";
+import { HintPanel } from "./HintPanel";
 import { HowToPlay } from "./HowToPlay";
 import { LockIcon } from "./icons";
 import { Leaderboard } from "./Leaderboard";
@@ -103,6 +104,7 @@ export function Game() {
   const [last, setLast] = useState<AttemptResult | null>(null);
   const [revealId, setRevealId] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const deniedInARow = history.findIndex((h) => h.approved) === -1 ? history.length : history.findIndex((h) => h.approved);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [sound, setSound] = useState(false);
   const [now, setNow] = useState(0); // set by the countdown interval; never read before a countdown starts
@@ -323,6 +325,15 @@ export function Game() {
                   busy={busy}
                   disabled={!session}
                   errors={errors}
+                />
+              )}
+
+              {!locked && (
+                <HintPanel
+                  key={`${level}-${goalId}`}
+                  level={level}
+                  goalId={goalId}
+                  deniedInARow={deniedInARow}
                 />
               )}
 

@@ -243,6 +243,18 @@ test.describe("keyboard, motion, layout", () => {
     await expect(page.getByTestId("how-to-play")).toBeHidden();
   });
 
+  test("hints reveal one at a time", async ({ page }) => {
+    await mockApi(page, () => ({ status: 200, body: result() }));
+    await page.goto("/");
+    await page.getByTestId("consent-start").click();
+    const list = page.getByTestId("hint-list");
+    await expect(list).toHaveCount(0);
+    await page.getByTestId("hint-next").click();
+    await expect(list.locator("li")).toHaveCount(1);
+    await page.getByTestId("hint-next").click();
+    await expect(list.locator("li")).toHaveCount(2);
+  });
+
   test("no horizontal scroll at 320 px @mobile", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 640 });
     await mockApi(page, () => ({ status: 200, body: result() }), { session: true });
