@@ -20,22 +20,22 @@ export function Leaderboard({ entries, level }: LeaderboardProps) {
         <p className="text-ink-soft">{copy.leaderboardEmpty}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[24rem] border-collapse text-left">
+          <table className="w-full border-collapse text-left text-sm sm:text-base">
             <thead className="border-b-2 border-ink text-sm text-ink-soft">
               <tr>
-                <th scope="col" className="px-2 py-2 font-bold">Rank</th>
-                <th scope="col" className="px-2 py-2 font-bold">Handle</th>
-                <th scope="col" className="px-2 py-2 text-right font-bold">Score</th>
-                <th scope="col" className="px-2 py-2 text-right font-bold">Attempts</th>
+                <th scope="col" className="px-1.5 py-2 sm:px-2 font-bold">Rank</th>
+                <th scope="col" className="px-1.5 py-2 sm:px-2 font-bold">Handle</th>
+                <th scope="col" className="px-1.5 py-2 sm:px-2 text-right font-bold">Score</th>
+                <th scope="col" className="px-1.5 py-2 sm:px-2 text-right font-bold">Attempts</th>
               </tr>
             </thead>
             <tbody className="figures">
               {entries.map((entry) => (
                 <tr key={`${entry.rank}-${entry.handle}`} className="border-b border-fog last:border-0">
-                  <td className="px-2 py-2 font-bold">{entry.rank}</td>
-                  <td className="px-2 py-2">{entry.handle}</td>
-                  <td className="px-2 py-2 text-right font-bold">{entry.score}</td>
-                  <td className="px-2 py-2 text-right">{entry.attempts}</td>
+                  <td className="px-1.5 py-2 sm:px-2 font-bold">{entry.rank}</td>
+                  <td className="max-w-[9rem] truncate px-1.5 py-2 sm:px-2">{entry.handle}</td>
+                  <td className="px-1.5 py-2 sm:px-2 text-right font-bold">{entry.score}</td>
+                  <td className="px-1.5 py-2 sm:px-2 text-right">{entry.attempts}</td>
                 </tr>
               ))}
             </tbody>

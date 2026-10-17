@@ -12,7 +12,8 @@ test.describe("first visit", () => {
     const api = await mockApi(page, () => ({ status: 200, body: result() }));
     await page.goto("/");
     const toggle = page.getByTestId("consent-toggle");
-    await expect(page.getByRole("dialog", { name: "Help train the next gate" })).toBeVisible();
+    await expect(page.getByRole("dialog", { name: "How to play" })).toBeVisible();
+    await expect(page.getByTestId("consent-sheet")).toContainText("Help train the next gate");
     await expect(toggle).toHaveAttribute("aria-checked", "false");
     await page.getByTestId("consent-start").click();
     await expect(page.getByTestId("consent-sheet")).toHaveCount(0);

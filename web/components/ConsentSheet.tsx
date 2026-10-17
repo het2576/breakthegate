@@ -27,7 +27,12 @@ export function ConsentSheet({ onStart }: ConsentSheetProps) {
 
   useEffect(() => {
     const dialog = ref.current;
-    if (dialog && !dialog.open) dialog.showModal();
+    if (dialog && !dialog.open) {
+      dialog.showModal();
+      // showModal focuses the first control, which scrolls a tall sheet past its heading.
+      dialog.querySelector<HTMLElement>("#consent-title")?.focus({ preventScroll: true });
+      dialog.scrollTop = 0;
+    }
   }, []);
 
   const start = async () => {
@@ -53,18 +58,18 @@ export function ConsentSheet({ onStart }: ConsentSheetProps) {
     >
       <div aria-hidden className="mx-auto mt-3 h-1.5 w-12 rounded-chip bg-signal ring-1 ring-ink sm:hidden" />
       <div className="px-5 pt-4 pb-6 sm:px-7 sm:pt-7">
-        <h2 id="consent-title" className="sign text-2xl">
-          {copy.consentTitle}
+        <h2 id="consent-title" tabIndex={-1} className="sign text-2xl focus-visible:shadow-none focus-visible:outline-none">
+          {copy.guideTitle}
         </h2>
-        <p id="consent-body" className="mt-3 max-w-[60ch] text-ink">
+        <p className="mt-2 max-w-[60ch]">{copy.howIntro}</p>
+        <HowSteps compact />
+
+        <h3 className="sign mt-6 text-lg">{copy.consentTitle}</h3>
+        <p id="consent-body" className="mt-1 max-w-[60ch] text-ink-soft">
           {copy.consentBody}
         </p>
 
-        <h3 className="sign mt-5 text-lg">{copy.guideTitle}</h3>
-        <p className="mt-1 max-w-[60ch]">{copy.howIntro}</p>
-        <HowSteps />
-
-        <div className="mt-5 flex items-center justify-between gap-4 rounded-field border-2 border-ink bg-paper px-4 py-3">
+        <div className="mt-3 flex items-center justify-between gap-4 rounded-field border-2 border-ink bg-paper px-4 py-3">
           <span id="consent-label" className="font-bold">
             {copy.consentToggle}
           </span>

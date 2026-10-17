@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 
 import { copy } from "@/lib/copy";
 
-export function HowSteps() {
+export function HowSteps({ compact = false }: { compact?: boolean }) {
   return (
-    <ol className="mt-3 space-y-2">
+    <ol className={`mt-3 space-y-2 ${compact ? "text-[0.95rem] leading-snug sm:text-base" : ""}`}>
       {copy.howSteps.map((step, i) => (
         <li key={step} className="flex gap-3">
           <span
@@ -29,7 +29,11 @@ export function HowToPlay({ open, onClose }: { open: boolean; onClose: () => voi
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      dialog.showModal();
+      dialog.querySelector<HTMLElement>("#how-title")?.focus({ preventScroll: true });
+      dialog.scrollTop = 0;
+    }
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
@@ -42,7 +46,7 @@ export function HowToPlay({ open, onClose }: { open: boolean; onClose: () => voi
       data-testid="how-to-play"
     >
       <div className="px-5 pt-5 pb-6 sm:px-7 sm:pt-7">
-        <h2 id="how-title" className="sign text-2xl">
+        <h2 id="how-title" tabIndex={-1} className="sign text-2xl focus-visible:shadow-none focus-visible:outline-none">
           {copy.guideTitle}
         </h2>
         <p className="mt-3 max-w-[60ch]">{copy.howIntro}</p>

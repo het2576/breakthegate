@@ -5,7 +5,7 @@ import { useRef, type KeyboardEvent } from "react";
 import { copy } from "@/lib/copy";
 import type { Level } from "@/lib/types";
 
-import { ChevronIcon, LockIcon, SpeakerIcon } from "./icons";
+import { LockIcon, SpeakerIcon } from "./icons";
 
 interface HeaderProps {
   levels: Level[];
@@ -40,7 +40,7 @@ function LevelPlates({ levels, level, onLevel }: Pick<HeaderProps, "levels" | "l
   };
 
   return (
-    <div role="tablist" aria-label="Levels" className="hidden items-center gap-2 sm:flex">
+    <div role="tablist" aria-label="Levels" className="order-last grid w-full grid-cols-5 gap-2 sm:order-none sm:flex sm:w-auto sm:items-center">
       {levels.map((lv, index) => {
         const active = lv.level === level;
         return (
@@ -77,9 +77,9 @@ function LevelPlates({ levels, level, onLevel }: Pick<HeaderProps, "levels" | "l
 export function Header({ levels, level, onLevel, sound, onSound, onHow }: HeaderProps) {
   return (
     <header className="bg-cobalt text-white">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-3 sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-2 gap-y-3 px-4 py-3 sm:flex-nowrap sm:gap-6 sm:px-6 sm:py-4 lg:px-8">
         <div className="min-w-0 flex-1 sm:flex-none">
-          <h1 className="sign text-sm leading-none whitespace-nowrap sm:text-2xl">
+          <h1 className="sign text-lg leading-none whitespace-nowrap min-[360px]:text-xl sm:text-2xl">
             {copy.title}
           </h1>
           <p className="mt-1 hidden max-w-[34ch] text-sm leading-snug text-white/90 lg:block">
@@ -89,24 +89,6 @@ export function Header({ levels, level, onLevel, sound, onSound, onHow }: Header
 
         {levels.length > 0 && <LevelPlates levels={levels} level={level} onLevel={onLevel} />}
 
-        {levels.length > 0 && (
-          <label className="relative sm:hidden">
-            <span className="sr-only">Level</span>
-            <select
-              value={level}
-              onChange={(e) => onLevel(Number(e.target.value))}
-              className="sign h-11 appearance-none rounded-field border-2 border-white/70 bg-cobalt py-1 pr-8 pl-2 text-sm text-white"
-            >
-              {levels.map((lv) => (
-                <option key={lv.level} value={lv.level}>
-                  Level {lv.level}
-                  {lv.locked ? " (locked)" : ""}
-                </option>
-              ))}
-            </select>
-            <ChevronIcon className="pointer-events-none absolute top-1/2 right-2 size-5 -translate-y-1/2" />
-          </label>
-        )}
 
         <button
           type="button"
